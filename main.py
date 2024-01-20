@@ -65,7 +65,6 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 blockList = [1191341849747673131]
-# nasheed = "https://cdn.discordapp.com/attachments/1175950311639224410/1194565587641303120/dcc0db62ab1a2662.mp3?ex=65ba0b66&is=65a79666&hm=b2372e6b2139ed698419b576c90c8b5468d4b76c0942dca02d91bc6bbcfcdf5a&"
 nasheedPath = "../../nasheed"
 nasheeds = LoadNasheeds()
 client = MyClient(intents=intents)
