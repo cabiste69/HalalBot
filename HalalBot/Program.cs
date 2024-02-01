@@ -1,8 +1,10 @@
 using HalalBot;
-using Discord;
-using Discord.WebSocket;
-using Discord.Addons.Hosting;
 using HalalBot.Utils;
+
+using Discord;
+using Discord.Addons.Hosting;
+using Discord.Commands;
+using Discord.WebSocket;
 
 // CreateApplicationBuilder configures a lot of stuff for us automatically
 // See: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host
@@ -16,14 +18,18 @@ builder.Services.AddDiscordHost((config, _) =>
         LogLevel = LogSeverity.Verbose,
         AlwaysDownloadUsers = true,
         MessageCacheSize = 200,
-        GatewayIntents = GatewayIntents.All,
-        UseInteractionSnowflakeDate = false
+        GatewayIntents = GatewayIntents.All
     };
 
     config.Token = builder.Configuration["Token"]!;
 });
 
-// Optionally wire up the interaction service
+builder.Services.AddCommandService((config, _) =>
+{
+    config.DefaultRunMode = RunMode.Async;
+    config.CaseSensitiveCommands = false;
+});
+
 builder.Services.AddInteractionService((config, _) =>
 {
     config.LogLevel = LogSeverity.Verbose;
@@ -32,10 +38,12 @@ builder.Services.AddInteractionService((config, _) =>
 
 // Add any other services here
 builder.Services.AddHostedService<InteractionHandler>();
+builder.Services.AddHostedService<CommandHandler>();
 builder.Services.AddHostedService<BotStatusService>();
 builder.Services.AddTransient<FFmpeg>();
 // builder.Services.AddHostedService<LongRunningService>();
 
-var host = builder.Build();
 Globals.Init(builder.Configuration["NasheedPath"]!);
+
+var host = builder.Build();
 await host.RunAsync();

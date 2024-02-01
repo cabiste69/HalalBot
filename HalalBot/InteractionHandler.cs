@@ -7,16 +7,10 @@ using Discord.Addons.Hosting.Util;
 
 namespace HalalBot;
 
-public class InteractionHandler : DiscordClientService
+public class InteractionHandler(DiscordSocketClient client, ILogger<DiscordClientService> logger, InteractionService handler, IServiceProvider provider) : DiscordClientService(client, logger)
 {
-    private readonly InteractionService _handler;
-    private readonly IServiceProvider _provider;
-
-    public InteractionHandler(DiscordSocketClient client, ILogger<DiscordClientService> logger, InteractionService handler, IServiceProvider provider) : base(client, logger)
-    {
-        _handler = handler;
-        _provider = provider;
-    }
+    private readonly InteractionService _handler = handler;
+    private readonly IServiceProvider _provider = provider;
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
